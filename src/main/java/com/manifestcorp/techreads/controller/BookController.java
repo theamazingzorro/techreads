@@ -5,8 +5,9 @@ import com.manifestcorp.techreads.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
@@ -36,9 +37,15 @@ public class BookController {
         return "add";
     }
 
-    @RequestMapping(value = {"", "/"}, method=POST)
-    public RedirectView addBook(Book book) {
-        bookRepository.saveAndFlush(book);
-        return new RedirectView("books");
+    @RequestMapping(value = "/submit", method=POST)
+    public View submitForm(@ModelAttribute Book newBook) {
+        bookRepository.saveAndFlush(newBook);
+        return new RedirectView("/books");
+    }
+
+    @RequestMapping("/remove/{id}")
+    public View remove(@PathVariable("id")Long id) {
+        bookRepository.deleteById(id);
+        return new RedirectView("/books");
     }
 }
