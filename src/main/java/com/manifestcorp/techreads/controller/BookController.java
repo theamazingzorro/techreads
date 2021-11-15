@@ -2,6 +2,7 @@ package com.manifestcorp.techreads.controller;
 
 import com.manifestcorp.techreads.model.Book;
 import com.manifestcorp.techreads.repository.BookRepository;
+import org.h2.engine.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -56,5 +57,20 @@ public class BookController {
         mav.addObject("book", bookRepository.getById(id));
 
         return mav;
+    }
+
+    @RequestMapping("/edit/{id}")
+    public ModelAndView edit(@PathVariable("id")Long id) {
+        ModelAndView mav = new ModelAndView("edit");
+
+        mav.addObject("bookForm", bookRepository.getById(id));
+
+        return mav;
+    }
+
+    @RequestMapping(value = "/edit", method=POST)
+    public View editSubmit(@ModelAttribute Book book) {
+        bookRepository.saveAndFlush(book);
+        return new RedirectView("/books");
     }
 }
