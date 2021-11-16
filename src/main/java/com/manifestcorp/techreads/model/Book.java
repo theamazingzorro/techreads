@@ -25,6 +25,17 @@ public class Book {
         this.rating = rating;
     }
 
+    public Book(Book original) {
+        this.copy(original);
+    }
+
+    public void copy(Book original) {
+        this.title = original.getTitle();
+        this.author = original.getAuthor();
+        this.coverURL = original.getCoverURL();
+        this.rating = original.getRating();
+    }
+
     public String getCoverURL() {
         return coverURL;
     }
