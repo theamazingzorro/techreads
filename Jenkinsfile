@@ -10,7 +10,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                echo './mvnw test'
+                sh './mvnw test'
             }
         }
         stage('Deploy') {
