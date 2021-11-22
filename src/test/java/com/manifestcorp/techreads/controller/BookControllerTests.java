@@ -2,6 +2,7 @@ package com.manifestcorp.techreads.controller;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.manifestcorp.techreads.model.Book;
@@ -45,9 +46,16 @@ public class BookControllerTests {
     }
 
     @Test
-    void testAddPage() throws Exception {
-        /*mockMvc.perform(get("/books/add")).andExpect(status().isOk())
-                .andExpect(model().attribute("bookForm", new Book()))
-                .andExpect(view().name("add"));*/
+    void testAddBookPage() throws Exception {
+        mockMvc.perform(get("/books/add")).andExpect(status().isOk())
+                .andExpect(model().attribute("bookForm.title", new Book().getTitle()))
+                .andExpect(view().name("add"));
+    }
+
+    @Test
+    void testAddBookFormSubmit() throws Exception {
+        mockMvc.perform(post("/books/submit").param("title", "example")
+                .param("author","author").param("rating", "3")
+                .param("url", "url")).andExpect(status().is3xxRedirection());
     }
 }
