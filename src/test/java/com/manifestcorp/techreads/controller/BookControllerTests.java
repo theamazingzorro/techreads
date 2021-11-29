@@ -1,6 +1,7 @@
 package com.manifestcorp.techreads.controller;
 
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.BDDMockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -35,7 +36,7 @@ public class BookControllerTests {
             books.add(i, new Book("test " + i, "author", "url", 2.5));
         }
 
-        given(this.bookRepository.findAll()).willReturn(this.books);
+        when(this.bookRepository.findAll()).thenReturn(this.books);
     }
 
     @Test
@@ -54,8 +55,11 @@ public class BookControllerTests {
 
     @Test
     void testAddBookFormSubmit() throws Exception {
-        mockMvc.perform(post("/books/submit").param("title", "example")
-                .param("author","author").param("rating", "3")
-                .param("url", "url")).andExpect(status().is3xxRedirection());
+        Book testBook = new Book("test_title", "test_author", "test_url", 3);
+        mockMvc.perform(post("/books/submit").param("title", testBook.getTitle())
+                        .param("author", testBook.getAuthor()).param("coverURL", testBook.getTitle())
+                        .param("rating", ""+testBook.getRating()))
+                .andExpect(status().is3xxRedirection());
+
     }
 }
