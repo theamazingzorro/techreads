@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -87,7 +86,7 @@ public class ResourceControllerTests {
 
     @Test
     void testAdd() throws Exception {
-        when(bookRepository.saveAndFlush(anyObject())).thenReturn(testBook);
+        when(bookRepository.saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())))).thenReturn(testBook);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,7 +98,7 @@ public class ResourceControllerTests {
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.title", is(testBook.getTitle())));
 
-        verify(bookRepository).saveAndFlush(anyObject());
+        verify(bookRepository).saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())));
     }
 
     @Test
@@ -118,7 +117,7 @@ public class ResourceControllerTests {
     @Test
     void testUpdateSuccess() throws Exception {
         when(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(books.get(1)));
-        when(bookRepository.saveAndFlush(anyObject())).thenReturn(testBook);
+        when(bookRepository.saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())))).thenReturn(testBook);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/books/"+TEST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -131,7 +130,7 @@ public class ResourceControllerTests {
                 .andExpect(jsonPath("$.title", is(testBook.getTitle())));
 
         verify(bookRepository).findById(TEST_ID);
-        verify(bookRepository).saveAndFlush(anyObject());
+        verify(bookRepository).saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())));
     }
 
     @Test
