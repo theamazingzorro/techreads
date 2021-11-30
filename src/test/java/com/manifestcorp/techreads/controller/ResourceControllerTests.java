@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,12 +36,12 @@ public class ResourceControllerTests {
 
     private List<Book> books;
     private Book testBook;
-    private final long MISSING_ID = 0l;
-    private final long TEST_ID = 1l;
+    private final long MISSING_ID = 0L;
+    private final long TEST_ID = 1L;
 
     @BeforeEach
     void setup() {
-        this.books = new ArrayList<Book>();
+        this.books = new ArrayList<>();
         for(int i = 0; i < 10; i++) {
             books.add(i, new Book("list " + i, "author", "url", 2.5));
         }
@@ -88,7 +87,7 @@ public class ResourceControllerTests {
     void testAdd() throws Exception {
         when(bookRepository.saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())))).thenReturn(testBook);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/api/books")
+        MockHttpServletRequestBuilder mockRequest = post("/api/books")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(testBook));
@@ -105,7 +104,7 @@ public class ResourceControllerTests {
     void testDelete() throws Exception {
         doNothing().when(bookRepository).deleteById(TEST_ID);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.delete("/api/books/"+TEST_ID)
+        MockHttpServletRequestBuilder mockRequest = delete("/api/books/"+TEST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -119,7 +118,7 @@ public class ResourceControllerTests {
         when(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(books.get(1)));
         when(bookRepository.saveAndFlush(argThat((Book book) -> book.getTitle().equals(testBook.getTitle())))).thenReturn(testBook);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/books/"+TEST_ID)
+        MockHttpServletRequestBuilder mockRequest = put("/api/books/"+TEST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(testBook));
@@ -137,7 +136,7 @@ public class ResourceControllerTests {
     void testUpdateFailure() throws Exception {
         when(bookRepository.findById(MISSING_ID)).thenReturn(Optional.empty());
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.put("/api/books/"+MISSING_ID)
+        MockHttpServletRequestBuilder mockRequest = put("/api/books/"+MISSING_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(testBook));

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Objects;
 
 @Entity
 public class Book {
@@ -11,11 +12,11 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+
     String title;
     String author;
     String coverURL;
     double rating;
-
     public Book() {}
 
     public Book(String title, String author, String coverURL, double rating) {
@@ -74,5 +75,18 @@ public class Book {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Double.compare(book.rating, rating) == 0 && id.equals(book.id) && Objects.equals(title, book.title) && Objects.equals(author, book.author) && Objects.equals(coverURL, book.coverURL);
+    }
+
+    @Override
+    public String toString() {
+        return "" + this.id + ", " + this.title + ", " + this.author + ", " + this.rating + ", " + this.coverURL;
     }
 }
