@@ -1,6 +1,5 @@
 package com.manifestcorp.techreads.controller;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -31,7 +30,6 @@ public class BookControllerTests {
 
     private List<Book> books;
     private Book testBook;
-    private final long MISSING_ID = 0L;
     private final long TEST_ID = 1L;
 
     @BeforeEach

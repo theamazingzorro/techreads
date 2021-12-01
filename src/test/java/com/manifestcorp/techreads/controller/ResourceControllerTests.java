@@ -5,6 +5,7 @@ import com.manifestcorp.techreads.model.Book;
 import com.manifestcorp.techreads.repository.BookRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,7 +37,7 @@ public class ResourceControllerTests {
 
     private List<Book> books;
     private Book testBook;
-    private Book bookWithTestTitle;
+    private ArgumentMatcher<Book> hasTestTitle;
     private final long MISSING_ID = 0L;
     private final long TEST_ID = 1L;
 
@@ -49,7 +50,7 @@ public class ResourceControllerTests {
 
         testBook = new Book("testing book", "test author", "test url", 3);
 
-        bookWithTestTitle = argThat((Book book) -> book.getTitle().equals(testBook.getTitle()));
+        hasTestTitle = (Book book) -> book.getTitle().equals(testBook.getTitle());
     }
 
     @Test
@@ -88,7 +89,7 @@ public class ResourceControllerTests {
 
     @Test
     void testAdd() throws Exception {
-        when(bookRepository.saveAndFlush(bookWithTestTitle)).thenReturn(testBook);
+        when(bookRepository.saveAndFlush(argThat(hasTestTitle))).thenReturn(testBook);
 
         MockHttpServletRequestBuilder mockRequest = post("/api/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,7 +101,7 @@ public class ResourceControllerTests {
                 .andExpect(jsonPath("$", notNullValue()))
                 .andExpect(jsonPath("$.title", is(testBook.getTitle())));
 
-        verify(bookRepository).saveAndFlush(bookWithTestTitle);
+        verify(bookRepository).saveAndFlush(argThat(hasTestTitle));
     }
 
     @Test
@@ -119,7 +120,7 @@ public class ResourceControllerTests {
     @Test
     void testUpdateSuccess() throws Exception {
         when(bookRepository.findById(TEST_ID)).thenReturn(Optional.of(books.get(1)));
-        when(bookRepository.saveAndFlush(bookWithTestTitle)).thenReturn(testBook);
+        when(bookRepository.saveAndFlush(argThat(hasTestTitle))).thenReturn(testBook);
 
         MockHttpServletRequestBuilder mockRequest = put("/api/books/"+TEST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -132,7 +133,7 @@ public class ResourceControllerTests {
                 .andExpect(jsonPath("$.title", is(testBook.getTitle())));
 
         verify(bookRepository).findById(TEST_ID);
-        verify(bookRepository).saveAndFlush(bookWithTestTitle);
+        verify(bookRepository).saveAndFlush(argThat(hasTestTitle));
     }
 
     @Test
