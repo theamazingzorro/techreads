@@ -6,11 +6,14 @@ import org.h2.engine.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -39,7 +42,11 @@ public class BookController {
     }
 
     @RequestMapping(value = "/submit", method=POST)
-    public View submitForm(@ModelAttribute Book newBook) {
+    public View submitForm(@Valid @ModelAttribute Book newBook, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new JstlView("add");
+        }
+
         bookRepository.saveAndFlush(newBook);
         return new RedirectView("/books");
     }
@@ -69,7 +76,11 @@ public class BookController {
     }
 
     @RequestMapping(value = "/edit", method=POST)
-    public View editSubmit(@ModelAttribute Book book) {
+    public View editSubmit(@Valid @ModelAttribute Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new JstlView("edit");
+        }
+
         bookRepository.saveAndFlush(book);
         return new RedirectView("/books");
     }

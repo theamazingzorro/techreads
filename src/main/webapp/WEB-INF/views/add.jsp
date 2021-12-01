@@ -9,10 +9,10 @@
 
 	<%--@elvariable id="bookForm" type="com.manifestcorp.techreads.model.Book"--%>
 	<form:form method="post" modelAttribute="bookForm" action="${pageContext.request.contextPath}/books/submit">
-		<label>Title: <form:input path="title" type="text" /></label> <br />
-		<label>Author: <form:input path="author" type="text" /></label> <br />
-		<label>Rating: <form:input path="rating" type="text" /></label> <br />
-		<label>Cover Image URL: <form:input path="coverURL" type="text" /></label> <br/>
+		<label>Title: <form:input path="title" type="text" /> <form:errors path="title"/> </label> <br />
+		<label>Author: <form:input path="author" type="text" /> <form:errors path="author"/> </label> <br />
+		<label>Rating: <form:input path="rating" type="number" /> <form:errors path="rating"/> </label> <br />
+		<label>Cover Image URL: <form:input path="coverURL" type="text" /> <form:errors path="coverURL"/> </label> <br/>
 		<button type="submit">Add</button>
 	</form:form>
 

@@ -4,6 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
@@ -13,10 +16,19 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @NotNull
     String title;
+
+    @NotNull
     String author;
+
+    @NotNull
     String coverURL;
+
+    @Min(0)
+    @Max(5)
     double rating;
+
     public Book() {}
 
     public Book(String title, String author, String coverURL, double rating) {
